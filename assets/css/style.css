@@ -1,0 +1,59 @@
+/* Base page styling */
+body {
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+ /* padding: 2rem;
+  transition: background 0.3s, color 0.3s; */
+}
+
+/* Main container for the app */
+.container {
+  max-width: 400px;
+  margin: auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Task input and Add button */
+.input-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+/* Task list styling */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #eee;
+  border-radius: 5px;
+}
+
+/* Completed task appearance */
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+/* Filter*
