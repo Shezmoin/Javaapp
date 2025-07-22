@@ -8,55 +8,56 @@ const themeToggle = document.getElementById("theme-toggle");
 // Store all tasks in an array
 let tasks = [];
 
-// Render tasks to the page based on the current filter
+// Render tasks based on selected filter
 function renderTasks(filter = "all") {
-  taskList.innerHTML = ""; // Clear the list before re-rendering
+  taskList.innerHTML = ""; // Clear current list
 
   tasks.forEach((task, index) => {
-    // Apply filtering logic
+    // Apply filtering
     if (filter === "completed" && !task.done) return;
     if (filter === "active" && task.done) return;
 
     // Create list item
     const li = document.createElement("li");
 
-    // Create the task text span
+    // ✅ Create checkbox
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = task.done;
+
+    checkbox.addEventListener("change", () => {
+      task.done = checkbox.checked;
+      renderTasks(filter); // Re-render with updated status
+    });
+
+    // Task label
     const span = document.createElement("span");
     span.textContent = task.text;
-
-    // Add "completed" class if task is done
     if (task.done) span.classList.add("completed");
 
-    // Toggle task completion when clicked
-    span.addEventListener("click", () => {
-      task.done = !task.done;
-      renderTasks(filter); // Refresh the view
-    });
-
-    // Create delete button
+    // Delete button with animation
     const delBtn = document.createElement("button");
     delBtn.textContent = "❌";
-
-    // Remove task when delete button is clicked
     delBtn.addEventListener("click", () => {
-      tasks.splice(index, 1);
-      renderTasks(filter);
+      li.classList.add("removed"); // add animation class
+      setTimeout(() => {
+        tasks.splice(index, 1); // remove from array
+        renderTasks(filter);    // refresh UI
+      }, 300); // match CSS animation duration
     });
 
-    // Add the text and delete button to the list item
-    li.append(span, delBtn);
-
-    // Add the list item to the task list
+    // Append elements to list item
+    li.append(checkbox, span, delBtn);
     taskList.appendChild(li);
   });
 }
 
-// Add a new task when the "Add" button is clicked
+// Add a new task when clicking "Add"
 addBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   if (text) {
     tasks.push({ text, done: false });
-    taskInput.value = ""; // Clear input field
+    taskInput.value = "";
     renderTasks();
   }
 });
@@ -68,12 +69,10 @@ filters.forEach(button => {
   });
 });
 
-// Toggle light/dark theme
+// Toggle dark/light theme
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Initial render when page loads
+// Initial render
 renderTasks();
-
-console.log("JavaScript is connected!"); // Checking if the js file is connected correctly

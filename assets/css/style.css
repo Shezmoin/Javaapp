@@ -56,4 +56,35 @@ li {
   color: gray;
 }
 
-/* Filter*
+/* Align checkboxes and text */
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+li span {
+  flex: 1;
+  margin-left: 0.5rem;
+}
+
+/* Smooth transition when marking a task done/undone */
+li span {
+  transition: all 0.3s ease;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+  opacity: 0.6;
+}
+
+li {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+li.removed {
+  opacity: 0;
+  transform: translateX(100%);
+}
