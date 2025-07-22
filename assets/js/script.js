@@ -5,31 +5,38 @@ const taskList = document.getElementById("task-list");
 const filters = document.querySelectorAll(".filter");
 const themeToggle = document.getElementById("theme-toggle");
 
-// Store tasks in an array
+// Store all tasks in an array
 let tasks = [];
 
 // Render tasks based on filter
 function renderTasks(filter = "all") {
-  taskList.innerHTML = ""; // Clear current list
+  taskList.innerHTML = "";
 
   tasks.forEach((task, index) => {
-    // Filter logic
+    // Skip tasks based on filter
     if (filter === "completed" && !task.done) return;
     if (filter === "active" && task.done) return;
 
     // Create list item
     const li = document.createElement("li");
 
-    // Create left side (checkbox + text)
+    // Add 'new' class if the task was just added
+    if (task.isNew) {
+      li.classList.add("new");
+      setTimeout(() => {
+        task.isNew = false; // remove flag so it doesn't animate again
+      }, 10);
+    }
+
+    // Create left section for checkbox + text
     const taskLeft = document.createElement("div");
     taskLeft.className = "task-left";
 
-    // Create checkbox
+    // Checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.done;
 
-    // Toggle task status when checkbox is changed
     checkbox.addEventListener("change", () => {
       task.done = checkbox.checked;
       renderTasks(filter);
@@ -40,37 +47,35 @@ function renderTasks(filter = "all") {
     span.textContent = task.text;
     if (task.done) span.classList.add("completed");
 
-    // Add checkbox and text to left side
     taskLeft.append(checkbox, span);
 
     // Delete button
     const delBtn = document.createElement("button");
     delBtn.textContent = "❌";
     delBtn.addEventListener("click", () => {
-      li.classList.add("removed"); // trigger CSS animation
+      li.classList.add("removed");
       setTimeout(() => {
         tasks.splice(index, 1);
         renderTasks(filter);
-      }, 300); // match animation time in CSS
+      }, 300);
     });
 
-    // Add everything to the list item
     li.append(taskLeft, delBtn);
     taskList.appendChild(li);
   });
 }
 
-// Add task when clicking "Add"
+// Add task on click
 addBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   if (text) {
-    tasks.push({ text, done: false });
+    tasks.push({ text, done: false, isNew: true }); // mark as new for animation
     taskInput.value = "";
     renderTasks();
   }
 });
 
-// Filter buttons
+// Filter buttons (All, Active, Completed)
 filters.forEach(button => {
   button.addEventListener("click", () => {
     renderTasks(button.dataset.filter);
@@ -81,6 +86,9 @@ filters.forEach(button => {
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
+
+// Set tooltip using JS (optional if not using `title` attribute)
+themeToggle.setAttribute("data-tooltip", "Toggle dark mode");
 
 // Initial render
 renderTasks();

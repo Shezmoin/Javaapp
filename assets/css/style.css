@@ -13,8 +13,8 @@ body {
   margin: auto;
   background: white;
   padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Input section: input + button */
@@ -27,18 +27,37 @@ body {
 input[type="text"] {
   flex: 1;
   padding: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
 button {
   padding: 0.5rem 1rem;
+  border-radius: 10px;
+  border: none;
   cursor: pointer;
+  background: #007bff;
+  color: white;
 }
 
-/* Filter buttons and dark mode toggle */
+button:hover {
+  background: #0056b3;
+}
+
+/* Filter buttons and theme toggle container */
 .filters {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.filters button {
+  flex: 1;
+  margin-right: 0.3rem;
+}
+
+.filters button:last-child {
+  margin-right: 0;
 }
 
 /* Task list styling */
@@ -56,7 +75,7 @@ li {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   background: #eee;
-  border-radius: 5px;
+  border-radius: 12px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -68,7 +87,7 @@ li {
   flex: 1;
 }
 
-/* Smooth animation when toggling completion */
+/* Smooth transition when toggling completed */
 .task-left span {
   transition: all 0.3s ease;
 }
@@ -80,10 +99,55 @@ li {
   opacity: 0.6;
 }
 
-/* Animation when deleting a task */
+/* Animate task deletion */
 li.removed {
   opacity: 0;
   transform: translateX(100%);
+}
+
+/* 🌗 Theme toggle floating button */
+#theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #fff;
+  border: none;
+  padding: 0.5rem 0.6rem;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s;
+}
+
+/* Hover effect and rotate */
+#theme-toggle:hover {
+  transform: rotate(20deg);
+  background-color: #f0f0f0;
+}
+
+/* Tooltip using data attribute */
+#theme-toggle::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background: #333;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+#theme-toggle:hover::after {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Dark mode styles */
@@ -96,8 +160,29 @@ body.dark .container {
   background: #2c2c2c;
 }
 
-body.dark input, body.dark button {
+body.dark input[type="text"], body.dark button {
   background: #444;
   color: white;
   border: none;
+}
+
+body.dark #theme-toggle {
+  background-color: #444;
+  color: white;
+}
+
+/* 🆕 Fade-in + slide-up animation for new tasks */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+li.new {
+  animation: fadeInSlide 0.3s ease;
 }
