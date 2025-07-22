@@ -5,54 +5,62 @@ const taskList = document.getElementById("task-list");
 const filters = document.querySelectorAll(".filter");
 const themeToggle = document.getElementById("theme-toggle");
 
-// Store all tasks in an array
+// Store tasks in an array
 let tasks = [];
 
-// Render tasks based on selected filter
+// Render tasks based on filter
 function renderTasks(filter = "all") {
   taskList.innerHTML = ""; // Clear current list
 
   tasks.forEach((task, index) => {
-    // Apply filtering
+    // Filter logic
     if (filter === "completed" && !task.done) return;
     if (filter === "active" && task.done) return;
 
     // Create list item
     const li = document.createElement("li");
 
-    // ✅ Create checkbox
+    // Create left side (checkbox + text)
+    const taskLeft = document.createElement("div");
+    taskLeft.className = "task-left";
+
+    // Create checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.done;
 
+    // Toggle task status when checkbox is changed
     checkbox.addEventListener("change", () => {
       task.done = checkbox.checked;
-      renderTasks(filter); // Re-render with updated status
+      renderTasks(filter);
     });
 
-    // Task label
+    // Task text
     const span = document.createElement("span");
     span.textContent = task.text;
     if (task.done) span.classList.add("completed");
 
-    // Delete button with animation
+    // Add checkbox and text to left side
+    taskLeft.append(checkbox, span);
+
+    // Delete button
     const delBtn = document.createElement("button");
     delBtn.textContent = "❌";
     delBtn.addEventListener("click", () => {
-      li.classList.add("removed"); // add animation class
+      li.classList.add("removed"); // trigger CSS animation
       setTimeout(() => {
-        tasks.splice(index, 1); // remove from array
-        renderTasks(filter);    // refresh UI
-      }, 300); // match CSS animation duration
+        tasks.splice(index, 1);
+        renderTasks(filter);
+      }, 300); // match animation time in CSS
     });
 
-    // Append elements to list item
-    li.append(checkbox, span, delBtn);
+    // Add everything to the list item
+    li.append(taskLeft, delBtn);
     taskList.appendChild(li);
   });
 }
 
-// Add a new task when clicking "Add"
+// Add task when clicking "Add"
 addBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   if (text) {
@@ -62,14 +70,14 @@ addBtn.addEventListener("click", () => {
   }
 });
 
-// Filter buttons: All / Active / Completed
+// Filter buttons
 filters.forEach(button => {
   button.addEventListener("click", () => {
     renderTasks(button.dataset.filter);
   });
 });
 
-// Toggle dark/light theme
+// Toggle light/dark theme
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
